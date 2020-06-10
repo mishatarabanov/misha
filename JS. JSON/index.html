@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS. JSON</title>
+</head>
+<body>
+    <div>
+        <p><b>Задание 1:</b></p>
+       <p><button id = "btn_1">Bitcoin</button></p>
+        <div id="out_1"></div>
+    </div>
+    <div>
+        <p><b>Задание 2:</b></p>
+        <p><button id = "btn_2">RUB/EUR</button></p>
+        <div id="out_2"></div>
+    </div>
+</body>
+<script>
+var private = new XMLHttpRequest(); 
+    btn_1.addEventListener("click",sndFnc);
+    function sndFnc(){ 
+        private.open("GET", "https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5");
+        private.onreadystatechange = reqReadyStateChangeUpd_1;        
+        private.send();
+    }
+    function reqReadyStateChangeUpd_1() {
+    if (private.readyState == 4) {    
+        var status = private.status;
+        if (status == 200) { 
+            obj = JSON.parse(private.responseText);
+            let pri = document.createElement("div");
+            pri.innerHTML = obj[3].ccy+" / "+obj[3].base_ccy+" buy: "+obj[3].buy+" sale: "+obj[3].sale;
+            console.log(obj);
+            out_1.append(pri);
+            }   
+        }   
+    }
+
+    var alfabank= new XMLHttpRequest(); 
+    btn_2.addEventListener("click",sndFnc_2);
+    function sndFnc_2(){ 
+        alfabank.open("GET", "https://developerhub.alfabank.by:8273/partner/1.0.0/public/rates");
+        alfabank.onreadystatechange = reqReadyStateChangeUpd_2;        
+        alfabank.send();
+    }
+    function reqReadyStateChangeUpd_2() {
+    if (alfabank.readyState == 4) {    
+        var status_2 = alfabank.status;
+        if (status_2 == 200) { 
+            obj_2 = JSON.parse(alfabank.responseText);
+            let alfa = document.createElement("div");
+            alfa.innerHTML = obj_2.rates[0].buyIso + "/" + obj_2.rates[0].sellIso + " " + "buy: " + obj_2.rates[0].buyRate+ " /sale: " + obj_2.rates[0].sellRate + ", дата и время: " +obj_2.rates[0].date;
+            console.log(obj_2);
+            out_2.append(alfa);
+            }   
+        }   
+    }
+</script>
+</html>
